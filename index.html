@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>gif</title>
+
+    <script src="js/gif.js"></script>
+    <script src="js/jquery-1.10.1.min.js"></script>
+
+    <style>
+
+        .demo{
+
+
+            position: relative;
+            background: #fff;
+            width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2em;
+
+        }
+
+        .images{
+
+
+            height: 392px;
+        }
+
+
+        .images img{
+
+
+
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 600px;
+            height: 392px;
+
+        }
+
+
+
+    </style>
+
+
+
+</head>
+<body>
+
+
+    <img src="" id="result">
+   <canvas width="600" height="392" id="canvas">
+
+   <div class="demo">
+
+       <div class="images" id="pic">
+
+           <img src="images/anim1.jpg" class="original" id="img">
+
+       </div>
+
+
+   </div>
+
+
+
+
+<script>
+
+    window.onload = function () {
+        var oImg = document.getElementById("img");
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d')
+
+        let gif = new GIF({
+            workers: 4,
+            quality: 30,
+            workerScript: "./js/gif.worker.js",
+            // transparent: "#fff",
+            // background: '#ffffff',
+        });
+        gif.on("finished",function(blob){
+            console.log(URL.createObjectURL(blob));
+            var file = new FileReader();
+            file.readAsDataURL(blob);
+            file.onload = function(){
+                document.getElementById("result").setAttribute("src", file.result)
+            }
+
+        })
+
+        var imgList = [
+            './images/anim1.jpg',
+            './images/anim2.jpg',
+            './images/anim3.jpg',
+            './images/anim4.jpg'
+        ];
+        var imgObjList = [],count = 0;
+
+        for (let i=0; i<imgList.length; i++){
+            var tmpImg = new Image();
+            imgObjList.push(tmpImg);
+            tmpImg.src = imgList[i];
+            tmpImg.onload = function () {
+                count++;
+                if (count === imgList.length ){
+                    generateGif(imgObjList);
+                }
+            }
+        }
+
+
+        function generateGif(imgObjList) {
+
+            for (let i=0;i<imgObjList.length;i++){
+                ctx.save();
+                ctx.drawImage(oImg,50,100,220,220);
+                ctx.drawImage(imgObjList[i],0,0,canvas.width,canvas.height);
+                ctx.restore();
+                gif.addFrame(canvas,{copy:true,delay:300})
+                ctx.clearRect(0,0,canvas.width,canvas.height)
+            }
+            gif.render();
+        }
+
+    }
+
+
+</script>
+
+
+</body>
+</html>
