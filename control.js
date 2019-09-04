@@ -35,6 +35,10 @@ $(function() {
 
 	$(".video").bind("loadedmetadata", function (e) {
 		video_size = {'w': this.videoWidth, 'h': this.videoHeight};
+
+		alert(this.videoWidth+":"+this.videoHeight)
+
+
 		$('.hide_until_load').removeClass('hidden');
 		noUiSlider.create(slider, {
 			start: [0, this.duration],
