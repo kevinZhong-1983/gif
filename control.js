@@ -13,17 +13,17 @@ let selected_file = null;
 let heap_limit = null;
 
 $(function() {
-	console.log('Loaded DOM.');
-	ffmpeg = new FFMPEG(document.querySelector(".download_links"));
-	try{
-		heap_limit = performance.memory.jsHeapSizeLimit;
-		console.debug("Heap limit found:", heap_limit)
-	}catch{}
+	// console.log('Loaded DOM.');
+	// ffmpeg = new FFMPEG(document.querySelector(".download_links"));
+	// try{
+	// 	heap_limit = performance.memory.jsHeapSizeLimit;
+	// 	console.debug("Heap limit found:", heap_limit)
+	// }catch{}
 
 	$("#video_selector").change(function (e) {
 		let fileInput = e.target;
-		let fileUrl = getFileURL(fileInput.files[0])
-		//window.URL.createObjectURL(fileInput.files[0]);
+		let fileUrl = window.URL.createObjectURL(fileInput.files[0]);
+
 		filename = fileInput.files[0].name;
 		selected_file = fileInput.files[0];
 
@@ -32,26 +32,11 @@ $(function() {
             $(".video").attr("src", fileUrl);
         }
 
-
-
 		alert(fileUrl)
 		e.target.remove();
 	});
 
 
-
-
-    function getFileURL(file) {
-        var getUrl = null;
-        if (window.createObjectURL != undefined) { // basic
-            getUrl = window.createObjectURL(file);
-        } else if (window.URL != undefined) { // mozilla(firefox)
-            getUrl = window.URL.createObjectURL(file);
-        } else if (window.webkitURL != undefined) { // webkit or chrome
-            getUrl = window.webkitURL.createObjectURL(file);
-        }
-        return getUrl;
-    }
 
 
 
