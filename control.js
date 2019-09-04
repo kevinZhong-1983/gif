@@ -26,6 +26,8 @@ $(function() {
 		filename = fileInput.files[0].name;
 		selected_file = fileInput.files[0];
 		$(".video").attr("src", fileUrl);
+
+		alert(fileUrl)
 		e.target.remove();
 	});
 
