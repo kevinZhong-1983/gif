@@ -1,6 +1,6 @@
 let video = document.querySelector(".video");
-const canvas = document.getElementById("canv");
-const ctx = canvas.getContext("2d");
+// const canvas = document.getElementById("canv");
+// const ctx = canvas.getContext("2d");
 let slider = document.getElementById('slider');
 
 let video_size = {'w': 0, 'h': 0};
@@ -47,7 +47,7 @@ $(function() {
 	$(".video").bind("loadedmetadata", function (e) {
 		video_size = {'w': this.videoWidth, 'h': this.videoHeight};
 
-		alert(this.videoWidth+":"+this.videoHeight)
+        alert(this.duration)
 
 
 		$('.hide_until_load').removeClass('hidden');
