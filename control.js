@@ -22,14 +22,38 @@ $(function() {
 
 	$("#video_selector").change(function (e) {
 		let fileInput = e.target;
-		let fileUrl = window.URL.createObjectURL(fileInput.files[0]);
+		let fileUrl = getFileURL(fileInput.files[0])
+		//window.URL.createObjectURL(fileInput.files[0]);
 		filename = fileInput.files[0].name;
 		selected_file = fileInput.files[0];
-		$(".video").attr("src", fileUrl);
+
+        if (fileUrl) {
+
+            $(".video").attr("src", fileUrl);
+        }
+
+
 
 		alert(fileUrl)
 		e.target.remove();
 	});
+
+
+
+
+    function getFileURL(file) {
+        var getUrl = null;
+        if (window.createObjectURL != undefined) { // basic
+            getUrl = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            getUrl = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            getUrl = window.webkitURL.createObjectURL(file);
+        }
+        return getUrl;
+    }
+
+
 
 	$("#mute_toggle").click(function (){
 		$(video).prop('muted', !$(video).prop('muted'));
