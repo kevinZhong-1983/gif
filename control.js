@@ -32,7 +32,7 @@ $(function() {
             $(".video").attr("src", fileUrl);
         }
 
-		alert(fileUrl)
+		//alert(fileUrl)
 		e.target.remove();
 	});
 
@@ -117,29 +117,29 @@ $(function() {
 		document.onmouseup = (e)=>{mup(e, ele)};
 	});
 
-	$("#run_ffmpeg").click(() => {
-		if(heap_limit){
-			if(selected_file.size * 2.5 > (heap_limit - performance.memory.usedJSHeapSize)){
-				if(!confirm("The given file is likely to crash your browser!\nContinue?")){
-					return
-				}
-			}
-		}
-		let cmd = build_ffmpeg_string(true);
-		let ts = (time_start?time_start.toFixed(2):0);
-		let te = (time_end?time_end.toFixed(2):0);
-		let duration = te - ts;
-		let progress_callback = (prog) => {
-			if(prog.done){
-				document.querySelector(".ffmpeg_log").textContent = "Conversion complete.";
-			}else {
-				let percent = (prog['time'] / duration) * 100;
-				document.querySelector(".ffmpeg_log").textContent = percent.toFixed(2) + "% complete.";
-			}
-		};
-		console.log('Running FFMPEG:', cmd);
-		ffmpeg.start(selected_file, cmd, progress_callback);
-	});
+	// $("#run_ffmpeg").click(() => {
+	// 	if(heap_limit){
+	// 		if(selected_file.size * 2.5 > (heap_limit - performance.memory.usedJSHeapSize)){
+	// 			if(!confirm("The given file is likely to crash your browser!\nContinue?")){
+	// 				return
+	// 			}
+	// 		}
+	// 	}
+	// 	let cmd = build_ffmpeg_string(true);
+	// 	let ts = (time_start?time_start.toFixed(2):0);
+	// 	let te = (time_end?time_end.toFixed(2):0);
+	// 	let duration = te - ts;
+	// 	let progress_callback = (prog) => {
+	// 		if(prog.done){
+	// 			document.querySelector(".ffmpeg_log").textContent = "Conversion complete.";
+	// 		}else {
+	// 			let percent = (prog['time'] / duration) * 100;
+	// 			document.querySelector(".ffmpeg_log").textContent = percent.toFixed(2) + "% complete.";
+	// 		}
+	// 	};
+	// 	console.log('Running FFMPEG:', cmd);
+	// 	ffmpeg.start(selected_file, cmd, progress_callback);
+	// });
 });
 
 
@@ -204,36 +204,36 @@ function pause_toggle(){
 	}
 }
 
-function build_ffmpeg_string(for_browser_run=false){
-	let ts = (time_start?time_start.toFixed(2):0);
-	let te = (time_end?time_end.toFixed(2):0);
-	let mpeg = for_browser_run?'': 'ffmpeg ';
-	mpeg+= '-ss '+ts+' -i "'+filename+'"';
-	if(for_browser_run && (!crop[0] || !crop[1])){
-		mpeg+=' -vf showinfo'
-	}
-	mpeg+=' -movflags faststart -t '+(te-ts).toFixed(4)+' ';
-	if(crop[0] && crop[1]){
-		let rect = canvas.getBoundingClientRect();
-		let box = crop_box(crop, rect.width, rect.height);
-		ctx.strokeStyle="#FF0000";
-		ctx.strokeRect(box.x, box.y, box.w, box.h);
-		box = crop_box(crop, video_size.w, video_size.h);
-		mpeg+= '-filter:v "crop='+box.w+':'+box.h+':'+box.x+':'+box.y;
-		if(for_browser_run){
-			mpeg+=', showinfo';
-		}
-		mpeg+= '" ';
-	}
-	let fn = for_browser_run ? encodeURI(filename.replace(/\.[^/.]+$/, "")) : 'out';
-	mpeg+='-c:a copy '+fn+'.mp4';
-	return mpeg;
-}
+// function build_ffmpeg_string(for_browser_run=false){
+// 	let ts = (time_start?time_start.toFixed(2):0);
+// 	let te = (time_end?time_end.toFixed(2):0);
+// 	let mpeg = for_browser_run?'': 'ffmpeg ';
+// 	mpeg+= '-ss '+ts+' -i "'+filename+'"';
+// 	if(for_browser_run && (!crop[0] || !crop[1])){
+// 		mpeg+=' -vf showinfo'
+// 	}
+// 	mpeg+=' -movflags faststart -t '+(te-ts).toFixed(4)+' ';
+// 	if(crop[0] && crop[1]){
+// 		let rect = canvas.getBoundingClientRect();
+// 		let box = crop_box(crop, rect.width, rect.height);
+// 		ctx.strokeStyle="#FF0000";
+// 		ctx.strokeRect(box.x, box.y, box.w, box.h);
+// 		box = crop_box(crop, video_size.w, video_size.h);
+// 		mpeg+= '-filter:v "crop='+box.w+':'+box.h+':'+box.x+':'+box.y;
+// 		if(for_browser_run){
+// 			mpeg+=', showinfo';
+// 		}
+// 		mpeg+= '" ';
+// 	}
+// 	let fn = for_browser_run ? encodeURI(filename.replace(/\.[^/.]+$/, "")) : 'out';
+// 	mpeg+='-c:a copy '+fn+'.mp4';
+// 	return mpeg;
+// }
 
 function update(){
-	canvas.width = $(video).width();
-	canvas.height = $(video).height();
-	ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+	//canvas.width = $(video).width();
+	//canvas.height = $(video).height();
+	//ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 	if (video.currentTime < time_start)
 		video.currentTime = time_start;
 	if (video.currentTime > time_end)
@@ -242,12 +242,12 @@ function update(){
 	$(".slider_time_pos").css("left", complete_percent + "%");
 	$(".current_time").text(video.currentTime.toFixed(2));
 	// noinspection JSCheckFunctionSignatures
-	ctx.drawImage(video, 0, 0, canvas.width, canvas.height); //TODO: Subimage using crop.
+	//ctx.drawImage(video, 0, 0, canvas.width, canvas.height); //TODO: Subimage using crop.
 
-	let mpeg = build_ffmpeg_string(false);
-	if($('.ffmpeg').text() !== mpeg) {
-		$('.ffmpeg').text(mpeg);
-	}
+	// let mpeg = build_ffmpeg_string(false);
+	// if($('.ffmpeg').text() !== mpeg) {
+	// 	$('.ffmpeg').text(mpeg);
+	// }
 	requestAnimationFrame(update.bind(this)); // Tell browser to trigger this method again, next animation frame.
 }
 
